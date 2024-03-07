@@ -6,15 +6,27 @@ const urlInput = document.getElementById("urlInput");
 const saveUrlButton = document.getElementById("saveUrlButton");
 const resetUrlButton = document.getElementById("resetUrlButton");
 
-// Setting click
-settingsButton.addEventListener("click", async () => {
-  settings.classList.toggle("hidden");
+async function getStoredUrl() {
+  const response = await chrome.runtime.sendMessage({ action: "getUrl" });
+  return response.url;
+}
 
+async function setStoredUrl(url) {
+  chrome.runtime.sendMessage({ action: "setUrl", url });
+}
+
+async function refreshSettingInput() {
   const url = await getStoredUrl();
   urlInput.value = url;
   console.log(`url=${url}`);
+}
+
+// Setting click
+settingsButton.addEventListener("click", async () => {
+  settings.classList.toggle("hidden");
 });
 
+// Submit click
 submitButton.addEventListener("click", async () => {
   const number = numberInput.value;
   if (number) {
@@ -25,6 +37,20 @@ submitButton.addEventListener("click", async () => {
   }
 });
 
+// Submit key press
+document.body.addEventListener("keyup", function (event) {
+  event.preventDefault();
+  const doesUrlInputHasTheFocus = document.activeElement === urlInput;
+  if (!doesUrlInputHasTheFocus) {
+    if (event.key === "Enter") {
+      submitButton.click();
+    } else if (event.keyCode === 13) {
+      submitButton.click();
+    }
+  }
+});
+
+// Settings Save click
 saveUrlButton.addEventListener("click", async () => {
   const url = urlInput.value;
   if (url) {
@@ -35,13 +61,11 @@ saveUrlButton.addEventListener("click", async () => {
   }
 });
 
+// Settings Reset click
 resetUrlButton.addEventListener("click", async () => {
   if (confirm("Are you sure you want to reset the URL?")) {
     await setStoredUrl(); // No URL entered
-
-    const url = await getStoredUrl();
-    urlInput.value = url;
-    console.log(`url=${url}`);
+    await refreshSettingInput();
   } else {
     console.log(`pop.resetUrlButton.click = canceled`);
   }
@@ -49,16 +73,6 @@ resetUrlButton.addEventListener("click", async () => {
 
 // Initial setup to get the stored URL and update the input field
 window.addEventListener("load", async () => {
-  const url = await getStoredUrl();
-  urlInput.value = url;
-  console.log(`url=${url}`);
+  numberInput.focus();
+  await refreshSettingInput();
 });
-
-async function getStoredUrl() {
-  const response = await chrome.runtime.sendMessage({ action: "getUrl" });
-  return response.url;
-}
-
-async function setStoredUrl(url) {
-  chrome.runtime.sendMessage({ action: "setUrl", url });
-}

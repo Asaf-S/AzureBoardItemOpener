@@ -1,11 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Board Item ID</title>
-</head>
-<body>
-  <input type="number" id="numberInput" placeholder="Enter a number">
-  <button id="submitButton">Submit</button>
-  <script src="popup.js"></script>
-</body>
+  <head>
+    <title>Board Work Item ID</title>
+    <style>
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body style="min-width: 400px">
+    <input type="number" id="numberInput" placeholder="Enter a number" />
+    <button id="submitButton">Submit</button>
+    <button id="settingsButton">Settings</button>
+    <div id="settings" class="hidden">
+      <h3>URL</h3><h6> ('{{input}}' will be replaced with the user's input):</h6>
+      <input type="url" id="urlInput" style="min-width: 600px;" />
+      <button id="saveUrlButton">Save URL</button>
+      <button id="resetUrlButton">Reset URL</button>
+    </div>
+    <script src="popup.js"></script>
+  </body>
 </html>

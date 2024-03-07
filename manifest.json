@@ -12,7 +12,8 @@
   },
   "keyboard": {
     "open_popup": {
-      "default": "Ctrl+3"
+      "default": "Ctrl+3",
+      "mac": "MacCtrl+3"
     }
   },
   "icons": {

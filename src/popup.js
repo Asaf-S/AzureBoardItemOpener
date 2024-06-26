@@ -6,6 +6,10 @@ const urlInput = document.getElementById("urlInput");
 const saveUrlButton = document.getElementById("saveUrlButton");
 const resetUrlButton = document.getElementById("resetUrlButton");
 
+// ------------------------------------------------------------------------------
+// Storage and background worker related functions
+// ------------------------------------------------------------------------------
+
 async function getStoredUrl() {
   const response = await chrome.runtime.sendMessage({ action: "getUrl" });
   return response.url;
@@ -18,19 +22,33 @@ async function setStoredUrl(url) {
 async function refreshSettingInput() {
   const url = await getStoredUrl();
   urlInput.value = url;
-  console.log(`url=${url}`);
+  // console.log(`url=${url}`);
 }
 
-// Setting click
-settingsButton.addEventListener("click", async () => {
-  settings.classList.toggle("hidden");
+async function openAzureDevOpsItem(number) {
+  chrome.runtime.sendMessage({ action: "openUrl", number });
+}
+
+// -----------------------------------------------------------------
+// Initial load
+// -----------------------------------------------------------------
+
+// Initial setup to get the stored URL and update the input field
+window.addEventListener("load", async () => {
+  await refreshSettingInput();
+  numberInput.focus();
 });
+
+
+// ------------------------------------------------------------------------------
+// Submit to open URL
+// ------------------------------------------------------------------------------
 
 // Submit click
 submitButton.addEventListener("click", async () => {
   const number = numberInput.value;
   if (number) {
-    chrome.runtime.sendMessage({ action: "openUrl", number });
+    openAzureDevOpsItem(number)
     // window.close();
   } else {
     alert("Please enter a number");
@@ -48,6 +66,15 @@ document.body.addEventListener("keyup", function (event) {
       submitButton.click();
     }
   }
+});
+
+// -----------------------------------------------------------------
+// Settings
+// -----------------------------------------------------------------
+
+// Setting click
+settingsButton.addEventListener("click", async () => {
+  settings.classList.toggle("hidden");
 });
 
 // Settings Save click
@@ -69,10 +96,4 @@ resetUrlButton.addEventListener("click", async () => {
   } else {
     console.log(`pop.resetUrlButton.click = canceled`);
   }
-});
-
-// Initial setup to get the stored URL and update the input field
-window.addEventListener("load", async () => {
-  numberInput.focus();
-  await refreshSettingInput();
 });

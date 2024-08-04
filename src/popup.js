@@ -48,7 +48,7 @@ window.addEventListener("load", async () => {
 submitButton.addEventListener("click", async () => {
   const number = numberInput.value;
   if (number) {
-    openAzureDevOpsItem(number)
+    openAzureDevOpsItem(number);
     // window.close();
   } else {
     alert("Please enter a number");
@@ -60,9 +60,7 @@ document.body.addEventListener("keyup", function (event) {
   event.preventDefault();
   const doesUrlInputHasTheFocus = document.activeElement === urlInput;
   if (!doesUrlInputHasTheFocus) {
-    if (event.key === "Enter") {
-      submitButton.click();
-    } else if (event.keyCode === 13) {
+    if (event.key === "Enter" || event.keyCode === 13) {
       submitButton.click();
     }
   }

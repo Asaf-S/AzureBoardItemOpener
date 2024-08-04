@@ -9,7 +9,10 @@
     </style>
   </head>
   <body style="min-width: 400px">
-    <input type="number" id="numberInput" placeholder="Enter a number" />
+    <!-- An input box that accepts only digits -->
+    <input type="text" id="numberInput" placeholder="Enter a number"
+      pattern="[0-9]*" inputmode="numeric"
+      oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
     <button id="submitButton">Submit</button>
     <button id="settingsButton">Settings</button>
     <div id="settings" class="hidden">

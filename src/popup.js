@@ -29,6 +29,32 @@ async function openAzureDevOpsItem(number) {
   chrome.runtime.sendMessage({ action: "openUrl", number });
 }
 
+function deprecatedGetClipboardContent() {
+  const dummyInput = document.createElement("input");
+  document.body.appendChild(dummyInput);
+  dummyInput.focus();
+  document.execCommand("paste");
+  const clipboardContent = dummyInput.value;
+  document.body.removeChild(dummyInput);
+  console.log("Clipboard content:", clipboardContent);
+  return clipboardContent;
+  // Process the clipboard content here
+}
+
+async function getClipboardContent() {
+  try {
+    const clipboardContent = await navigator.clipboard.readText();
+    return clipboardContent;
+  } catch (err) {
+    try {
+      return deprecatedGetClipboardContent();
+    } catch (err2) {
+      console.error("Failed to read clipboard contents!\nErr:", err, "Err2:", err2);
+      return "";
+    }
+  }
+}
+
 // -----------------------------------------------------------------
 // Initial load
 // -----------------------------------------------------------------
@@ -39,6 +65,23 @@ window.addEventListener("load", async () => {
   numberInput.focus();
 });
 
+// A trigger when the default pop-up window is opened
+document.addEventListener("DOMContentLoaded", function () {
+  // Your code here
+  setTimeout(
+    getClipboardContent().then((txt) => {
+      console.log(888);
+      if(numberInput) {
+        numberInput.value = txt;
+        numberInput.focus();
+        numberInput.select();
+      }
+    }),
+    50
+  );
+  console.log("Popup opened");
+  // Add any other actions you want to perform when the popup opens
+});
 
 // ------------------------------------------------------------------------------
 // Submit to open URL

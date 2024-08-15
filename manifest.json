@@ -3,7 +3,7 @@
   "name": "Azure DevOps Board Item Opener",
   "version": "1.1",
   "description": "Opens a new tab with a URL based on a number input",
-  "permissions": ["storage"],
+  "permissions": ["storage", "clipboardRead"],
   "background": {
     "service_worker": "src/background.js"
   },

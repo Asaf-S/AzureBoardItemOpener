@@ -67,20 +67,25 @@ window.addEventListener("load", async () => {
 
 // A trigger when the default pop-up window is opened
 document.addEventListener("DOMContentLoaded", function () {
-  // Your code here
   setTimeout(
     getClipboardContent().then((txt) => {
-      console.log(888);
-      if(numberInput) {
+      if (numberInput) {
+        console.log("Original clipboard text:", txt);
         numberInput.value = txt;
         numberInput.focus();
         numberInput.select();
+      } else {
+        console.log("numberInput wasn't loaded yet");
       }
     }),
     50
   );
   console.log("Popup opened");
   // Add any other actions you want to perform when the popup opens
+});
+
+numberInput.addEventListener("change", (event) => {
+  numberInput.value = removeNonDigits(event.target.value);
 });
 
 // ------------------------------------------------------------------------------
@@ -138,3 +143,11 @@ resetUrlButton.addEventListener("click", async () => {
     console.log(`pop.resetUrlButton.click = canceled`);
   }
 });
+
+// -----------------------------------------------------------------
+// Utils
+// -----------------------------------------------------------------
+
+function removeNonDigits(str) {
+  return str.replace(/\D/g, "");
+}

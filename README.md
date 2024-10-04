@@ -1,8 +1,6 @@
 # AzureBoardItemOpener
 Opens Azure DevOps board item
 
-<!-- https://github.com/ChromeAdmin/meetings-page-auto-closer-for-zoom -->
-
 Todo: On first load, force set the settings instead of redirecting the user to a 404 page with the default URL
 
 ## Request permissions (and how they are used)

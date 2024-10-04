@@ -1,7 +1,9 @@
 # AzureBoardItemOpener
 Opens Azure DevOps board item
 
-Todo: On first load, force set the settings instead of redirecting the user to a 404 page with the default URL
+Todo:
+1. On first load, force set the settings instead of redirecting the user to a 404 page with the default URL
+1. Auto-set the keyboard shortcut
 
 ## Request permissions (and how they are used)
 | **Request permission**        | **Usage**                                                                                                                                                                                                                       |

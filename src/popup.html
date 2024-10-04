@@ -10,15 +10,24 @@
   </head>
   <body style="min-width: 400px">
     <!-- An input box that accepts only digits -->
-    <input type="text" id="numberInput" placeholder="Enter a number"
-      pattern="[0-9]*" inputmode="numeric"
-      oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
-      <!-- <input general search https://dev.azure.com/ftpf/Habankaim/_search?text=abc*&type=workitem> -->
+    <input
+      type="text"
+      id="numberInput"
+      placeholder="Enter a number"
+      pattern="[0-9]*"
+      inputmode="numeric"
+    />
+    <!-- <input general search https://dev.azure.com/org/project/_search?text=abc*&type=workitem> -->
     <button id="submitButton">Submit</button>
     <button id="settingsButton">Settings</button>
+    <br>
+    <span id="removedNonDigitsCharactersIndication" class="hidden" style="color: green">
+      (Non-digit characters were removed)
+    </span>
     <div id="settings" class="hidden">
-      <h3>URL</h3><h6> ('{{input}}' will be replaced with the user's input):</h6>
-      <input type="url" id="urlInput" style="min-width: 600px;" />
+      <h3>URL</h3>
+      <h6>('{{input}}' will be replaced with the user's input):</h6>
+      <input type="url" id="urlInput" style="min-width: 600px" />
       <button id="saveUrlButton">Save URL</button>
       <button id="resetUrlButton">Reset URL</button>
     </div>

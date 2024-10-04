@@ -5,6 +5,7 @@ const settingsButton = document.getElementById("settingsButton");
 const urlInput = document.getElementById("urlInput");
 const saveUrlButton = document.getElementById("saveUrlButton");
 const resetUrlButton = document.getElementById("resetUrlButton");
+const removedNonDigitsCharactersIndication = document.getElementById("removedNonDigitsCharactersIndication");
 
 // ------------------------------------------------------------------------------
 // Storage and background worker related functions
@@ -36,23 +37,26 @@ function deprecatedGetClipboardContent() {
   document.execCommand("paste");
   const clipboardContent = dummyInput.value;
   document.body.removeChild(dummyInput);
-  console.log("Clipboard content:", clipboardContent);
   return clipboardContent;
   // Process the clipboard content here
 }
 
 async function getClipboardContent() {
+  let clipboardContent;
   try {
-    const clipboardContent = await navigator.clipboard.readText();
-    return clipboardContent;
+    clipboardContent = await navigator.clipboard.readText();
   } catch (err) {
     try {
-      return deprecatedGetClipboardContent();
+      console.error("Failed to read clipboard contents!\nErr:", err);
+      clipboardContent = deprecatedGetClipboardContent();
     } catch (err2) {
-      console.error("Failed to read clipboard contents!\nErr:", err, "Err2:", err2);
-      return "";
+      console.error("Failed to read clipboard contents!\nErr:", err, "\nErr2:", err2);
+      clipboardContent = "";
     }
   }
+
+  console.log("Clipboard content:", clipboardContent);
+  return clipboardContent;
 }
 
 // -----------------------------------------------------------------
@@ -65,13 +69,26 @@ window.addEventListener("load", async () => {
   numberInput.focus();
 });
 
+function setRemovedNonDigitsCharactersIndication(isVisible) {
+  if(removedNonDigitsCharactersIndication) {
+    removedNonDigitsCharactersIndication.classList.toggle("hidden", !isVisible);
+  }
+}
+
+function setInputForNumberInput(newContent) {
+  const afterRemoveNonDigits = removeNonDigits(newContent);
+  setRemovedNonDigitsCharactersIndication(afterRemoveNonDigits != newContent);
+  console.log(`afterRemoveNonDigits=${afterRemoveNonDigits}`);
+  numberInput.value=afterRemoveNonDigits;
+}
+
 // A trigger when the default pop-up window is opened
 document.addEventListener("DOMContentLoaded", function () {
   setTimeout(
     getClipboardContent().then((txt) => {
       if (numberInput) {
         console.log("Original clipboard text:", txt);
-        numberInput.value = txt;
+        setInputForNumberInput(txt);
         numberInput.focus();
         numberInput.select();
       } else {
@@ -84,8 +101,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Add any other actions you want to perform when the popup opens
 });
 
-numberInput.addEventListener("change", (event) => {
-  numberInput.value = removeNonDigits(event.target.value);
+numberInput.addEventListener("input", (event) => {
+  setInputForNumberInput(event.target.value);
 });
 
 // ------------------------------------------------------------------------------
